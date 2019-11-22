@@ -1,6 +1,6 @@
 # Web Bíblia Sagrada
 
-- [ ] __Funcionalidades
+- [ ] __Funcionalidades__
    - [ ] Script
    - [ ] HTML
 
