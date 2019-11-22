@@ -5,4 +5,4 @@ const bible = (language, version)=>{
     return bible;
 }
 
-console.log(bible())
+console.log(bible().get('genesis',1))

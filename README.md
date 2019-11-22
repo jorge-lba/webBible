@@ -12,7 +12,6 @@ Pagina para leitura e estudo da Biblia Sagrada
       - [x] Pasta Function para o Firebase 
          - [x] Pasta para a Biblia
             - [x] Add Arquivos JSON
-            - [ ] Exportando JSON
 
          - [x] Pasta para arquivos de controle
 
