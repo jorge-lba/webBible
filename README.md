@@ -9,10 +9,10 @@ Pagina para leitura e estudo da Biblia Sagrada
 
 - [ ] __Biblia__
    - [ ] API
-      - [ ] Pasta Function para o Firebase 
-         - [ ] Pasta para a Biblia
-         - [ ] Pasta para arquivos de controle
-   - [ ] Versões e Idiomas Variados
+      - [x] Pasta Function para o Firebase 
+         - [x] Pasta para a Biblia
+            - [x] Add Arquivos JSON 
+         - [x] Pasta para arquivos de controle
    - [ ] Compartilhamento
       - [ ] Copiar e Colar
       - [ ] Facebook
