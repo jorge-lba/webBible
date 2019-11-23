@@ -8,14 +8,14 @@ Pagina para leitura e estudo da Biblia Sagrada
    - [ ] Estudos
 
 - [ ] __Biblia__
-   - [ ] API
+   - [x] API
       - [x] Pasta Function para o Firebase 
          - [x] Pasta para a Biblia
             - [x] Add Arquivos JSON
 
          - [x] Pasta para arquivos de controle
 
-         - [ ] Implementar script para retornar a Bible
+         - [x] Implementar script para retornar a Bible
             - [x] Class Bible (Idioma, Versão)
             - [x] Constructor
             - [x] Teste se a chamada é valida
@@ -23,7 +23,7 @@ Pagina para leitura e estudo da Biblia Sagrada
             - [x] Getter
             - [x] TDD
             - [X] TDD 2
-      - [ ] Hospedar API no firebase
+      - [x] Hospedar API no firebase
          
    - [ ] Compartilhamento
       - [ ] Copiar e Colar

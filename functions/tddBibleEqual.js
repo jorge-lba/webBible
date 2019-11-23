@@ -32,9 +32,11 @@ const test = (array)=>{
         assert.equal(bibleClass,bibleObject,"Bible Class são diferentes Bible Object");
 
     })
+
+    return 'Teste concluido com Sucesso!';
 }
 
 
 const arrayTests = [['genesis',1,1],['mateus',1,1], ['joao'],['judas',1,5]] 
 
-test(arrayTests)
+console.log(test(arrayTests))
