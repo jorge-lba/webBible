@@ -23,6 +23,7 @@ Pagina para leitura e estudo da Biblia Sagrada
             - [x] Getter
             - [x] TDD
             - [X] TDD 2
+            - [X] Implementação de melhoria no getBible
       - [x] Hospedar API no firebase
          
    - [ ] Compartilhamento

@@ -1,3 +1,6 @@
+const fs = require('fs');
+var testKLL;
+
 Array.prototype.mapToFalse = function(callback){
     const newArray = [];
     for(let i = 0; i < this.length; i++){
@@ -21,10 +24,25 @@ const assentRemove = (text) =>{
     return text.replace(' ','').replace(' ', '').replace('1','I').replace('2','II').replace('3','III');                 
 };
 
-module.exports = class Bible{
-    constructor(language = 'pt-br', version = 'NVI'){
+const filterLanguage = (language,version) => {
 
-        this.all = require(`../bible/${language}/${version}`)();
+    const folder =(`./functions/bible/${language}`);
+
+    if(version)return version
+
+    if(language == 'pt-br'){
+        return fs.readdirSync(folder)[1];
+    }else{
+        return fs.readdirSync(folder)[0];
+    }
+}
+
+
+module.exports = class Bible{
+    constructor(language, version){
+        
+        this.version = filterLanguage(language, version);
+        this.all = require(`../bible/${language}/${this.version}`)();
         this.objectName = 'this.all';
     }
 
