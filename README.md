@@ -22,6 +22,8 @@ Pagina para leitura e estudo da Biblia Sagrada
             - [x] Seletor para o objeto
             - [x] Getter
             - [x] TDD
+            - [X] TDD 2
+      - [ ] Hospedar API no firebase
          
    - [ ] Compartilhamento
       - [ ] Copiar e Colar
