@@ -1,5 +1,4 @@
 const fs = require('fs');
-var testKLL;
 
 Array.prototype.mapToFalse = function(callback){
     const newArray = [];
@@ -26,23 +25,32 @@ const assentRemove = (text) =>{
 
 const filterLanguage = (language,version) => {
 
-    const folder =(`./functions/bible/${language}`);
+    const bLanguages = {ar:'SVD', de:'Schlachter', el:'Greek', en:'KJV', "pt-br":'NVI'}
+    const keyLanguage = Object.keys(bLanguages);
+    let valid = false;
+    let vLanguage;
 
-    if(version)return version
+    keyLanguage.forEach(e =>{
+        console.log(e +' == '+ language)
+        if(language == e){
+            version = bLanguages[e]
+            vLanguage = language
+            valid = true; 
+        }else if(!valid){
+            vLanguage = 'pt-br';
+            version = 'NVI';
+        }
+    })
 
-    if(language == 'pt-br'){
-        return fs.readdirSync(folder)[1];
-    }else{
-        return fs.readdirSync(folder)[0];
-    }
+    if(version)return [vLanguage,version]
+    return [vLanguage,version];
 }
 
-
 module.exports = class Bible{
-    constructor(language, version){
-        
-        this.version = filterLanguage(language, version);
-        this.all = require(`../bible/${language}/${this.version}`)();
+    constructor(language = 'pt-br', version){
+
+        this.config = filterLanguage(language, version);
+        this.all = require(`../bible/${this.config[0]}/${this.config[1]}`)();
         this.objectName = 'this.all';
     }
 
