@@ -18,9 +18,10 @@ Pagina para leitura e estudo da Biblia Sagrada
          - [ ] Implementar script para retornar a Bible
             - [x] Class Bible (Idioma, Versão)
             - [x] Constructor
-            - [ ] Teste se a chamada é valida
-            - [ ] Seletor para o objeto
-            - [ ] Getter
+            - [x] Teste se a chamada é valida
+            - [x] Seletor para o objeto
+            - [x] Getter
+            - [x] TDD
          
    - [ ] Compartilhamento
       - [ ] Copiar e Colar
