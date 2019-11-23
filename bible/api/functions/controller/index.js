@@ -31,7 +31,6 @@ module.exports = class Bible{
     selectObject(objectName, array){
         for(let i = 0; i <array.length; i++){
             objectName +=   `[\"${array[i]}\"]`;
-            console.log(objectName)
         }
         return eval(objectName);
     }
@@ -84,8 +83,6 @@ module.exports = class Bible{
 
             count++;
         }
-
-        console.log(array[0])
         
         array.push(this.all[array[0]].title);
         
