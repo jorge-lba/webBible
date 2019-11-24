@@ -1,4 +1,5 @@
 const fs = require('fs');
+const filterLanguage = require('../bible');
 
 Array.prototype.mapToFalse = function(callback){
     const newArray = [];
@@ -23,28 +24,6 @@ const assentRemove = (text) =>{
     return text.replace(' ','').replace(' ', '').replace('1','I').replace('2','II').replace('3','III');                 
 };
 
-const filterLanguage = (language,version) => {
-
-    const bLanguages = {ar:'SVD', de:'Schlachter', el:'Greek', en:'KJV', "pt-br":'NVI'}
-    const keyLanguage = Object.keys(bLanguages);
-    let valid = false;
-    let vLanguage;
-
-    keyLanguage.forEach(e =>{
-        console.log(e +' == '+ language)
-        if(language == e){
-            version = bLanguages[e]
-            vLanguage = language
-            valid = true; 
-        }else if(!valid){
-            vLanguage = 'pt-br';
-            version = 'NVI';
-        }
-    })
-
-    if(version)return [vLanguage,version]
-    return [vLanguage,version];
-}
 
 module.exports = class Bible{
     constructor(language = 'pt-br', version){
