@@ -83,15 +83,18 @@ module.exports = class Bible{
             if(arrayBible[count] == false){
                 const bibleError = this.selectObject(this.objectName,[]);
                 const errorKey = Object.keys(bibleError);
-                return [errorKey.map(e => bibleError[e]['title']), array]
+                const [...titles] = errorKey.map(e => bibleError[e]['title']);
+                return [Object.assign({},titles), array]
             }
 
             count++;
         }
         
         array.push(this.all[array[0]].title);
+
+        const result = this.selectObject(this.objectName, arrayBible)
         
-        return [this.selectObject(this.objectName, arrayBible), array];
+        return [{result}, array];
     }
 
     testValue(value){
@@ -105,8 +108,9 @@ module.exports = class Bible{
     }
 
     get(book, chapter, verse){                  // Fazer melhorias para ser mais flexivel (Idéia: Usar um array com todos os parametros)
-
-        if(book == false || book == undefined)return 'Selecione um livro!'
+        
+        const msgError = [{ERRO:'Selecione um livro!'}]
+        if(book == false || book == undefined)return msgError
         chapter = this.testValue(chapter);
         verse = this.testValue(verse);
         book = assentRemove(book)

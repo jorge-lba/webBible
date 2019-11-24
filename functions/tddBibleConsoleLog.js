@@ -12,15 +12,16 @@ const arrayTest = [['GêNesiS',1,1],['genesis',1,54645],['genesis',6546545,1],['
 
 const tdd = ()=>{
 
-    arrayTest.forEach(array => {
+    arrayTest.forEach((array, index) => {
         let [test] = bible().get(array[0],array[1],array[2]);
+
+        console.log(test);
 
         if(test == null){
             test =  'Value Null'
         }else{
             test = typeof test
         }
-
     
         assert.equal(test,'object' ,"Bible Class são diferentes Bible Object");
         
