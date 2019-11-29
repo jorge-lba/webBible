@@ -1,15 +1,56 @@
 # JSON Formatter
 
-Está aplicação foi desenvolvida para rodar em node js
+Essa aplicação foi desenvolvida para formatar arquivos .json, com finalidade de agilizar o processo de alterações do formato original.
 
-Estou desenvolvendo uma api para consultar a Bíblia. Em busca de arquivos para usar achei o github do Thiago Bodruk, em seu repositório existem diversas versões e idiomas (https://github.com/thiagobodruk/bible/tree/master/json)
+Todas as versões utilizadas foram disponibilizadas no Github do [Thiago Bodruk](https://github.com/thiagobodruk).
+Estrutura JSON:
 
-Os arquivos que utilizei são os .json, porem para fins de uma melhor legibilidade e manutenção, achei melhor mudar um pouco a formatação.
-Como o processo manual seria muito trabalhoso e demorado, então criei esta aplicação para automatizar o processo.
+    [
+        {
+        "abbrev" : "abbrev"
+        "book" : "name"
+        "chapters": 
+            [
+                ["Verse 1", "Verse 2", "Verse 3", "..."],
+                ["Verse 1", "Verse 2", "Verse 3", "..."],
+                ["Verse 1", "Verse 2", "Verse 3", "..."]
+            ]
+        }
+    ]
 
-A alteração feita é mudar de padrão de array utilizado (chapter: [[verse 1, verse 2,...]]), para o padrão de objeto (chapter: {1: {1: verse, 2:verse, ...}}). Tambem é feita a separação dos livros em arquivos (_genesis.json, _exodo.json...), desta forma caso tenha que atualizar algum erro os livros estaram individualizados, assim o arquivo atualizado sera menor.
+Por preferencia decidi mudar para a seguinte estrutura:
 
-Alem da formatação a aplicação cria um arquivo index.js para acessar os livros. Este arquivo exporta uma função que faz os require() e retorna um obj com os livros ({genesis,exedo, ...})
+    [
+        {
+        "language":"pt-br",
+        "title":"Judas",
+        "abbreviation":"jd",
+        "newTestament":true 
+        "1": {
+                "1":"Verse 1",
+                "2":"Verse 2",
+                "3":"Verse 3"... 
+            }...
 
-O acesso dos arquivo são simples de serem feitos, deixei um exmplo com onde crio três acessos em idiomas diferentes e faz um console.log mostrando as versões  (/bible/JSONNovo/index.js)
+        }
+    ]
 
+O script será responsável também por separar os livros em suas respectivas pastas. Exemplo:
+
+    +- bible/
+        |
+        +- pt-br/
+            |
+            +- NVI/
+                |
+                +- _genesis.json
+                |
+                +- _exodo.json
+                |
+                +- ...
+                |
+                +- index.js
+
+No formato original todos os livros estão em um único arquivo, fragmentando em diversos arquivos, assim caso seja necessário fazer uma atualização ou correção ficara mais simples e leve de ser implementada.
+
+Também será criado um arquivo index.js para fazer os require() unindo todos o livro para um acesso mais simples pelo script de controle.
