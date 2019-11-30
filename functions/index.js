@@ -3,19 +3,23 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp();
 
-const cors = require('cors');
+const cors = require('cors')({origin: true});
 
 //admin.initializeApp();
 
 exports.bible = functions.https.onRequest(async (req, res) => {
-    const bibleV = new Bible(
-        req.query.language,
-        req.query.version
-        ).get(
-            req.query.book,
-            req.query.chapter,
-            req.query.verse
-            )
+    cors(req, res, ()=>{
 
-    res.send(bibleV); 
+        const bibleV = new Bible(
+            req.query.language,
+            req.query.version
+            ).get(
+                req.query.book,
+                req.query.chapter,
+                req.query.verse
+                )
+    
+        res.send(bibleV); 
+    })
+    
   });
