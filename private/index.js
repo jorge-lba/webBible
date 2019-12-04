@@ -1,90 +1,114 @@
 //import { get } from "http";
 
 //const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-const xmlHttp = new XMLHttpRequest();
 const text = document.getElementById('content');
+const _book =  document.getElementById('books');
+const _chapter = document.getElementById('chapters');
+const _verse = document.getElementById('verses');
+
 
 
 
 const getBible = (book, chapter, verse) =>{
-    const url = `https://us-central1-webbible-kll.cloudfunctions.net/bible?book=${book}&chapter=${chapter}&verse=${verse}` 
+    const xmlHttp = new XMLHttpRequest();
+    const url = `https://us-central1-webbible-kll.cloudfunctions.net/bible?book=${book}&chapter=${chapter}&verse=${verse}`
+    let  myArr ='';
+    xmlHttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            myArr = JSON.parse(this.responseText);
+        }
+    };
 
     xmlHttp.open( "GET", url, false ); // false for synchronous request
-    xmlHttp.send( null );
-    return JSON.parse(xmlHttp.responseText);
+    xmlHttp.send();
+    
+    return myArr
+
 }
 
 const books = (value) => {
     const book = getBible(...value);
-    return  Object.values(book[0])
+    return  Object.values(book[0]);
 }
-
-
 
 function myFunction(event) { 
     const tag = document.getElementById(event.target.id)
     selectValue(tag);
+
 }
 
 const selectValue = (tag) =>{
     tag.onchange = function(){
-    
-        const value = []        
-        let tagName = tag.id;
-        
-        if(tagName == "books"){
-            tagName = "chapters"
-            value[0] = document.getElementById('books').value
-        }else if(tagName == "chapters"){
-            tagName = "verses"
-            value[0] = document.getElementById('books').value
-            value[1] = document.getElementById('chapters').value
-        }
-
-        const bible = getBible(...value)[0].result;
-        delete bible.language
-        delete bible.title
-        delete bible.abbreviation
-        delete bible.newTestament
-    
-        whiteOpitons(tagName,Object.keys(bible));
+        callNewOptions(tag.id);        
     };
+}
+const callNewOptions = (idName) =>{
+    const value = [];
+    let tagName =idName;
+    if(tagName == "books"){
+        tagName = "chapters";
+        value[0] = _book.value;
+    }else if(tagName == "chapters"){
+        tagName = "verses";
+        value[0] = _book.value;
+        value[1] = _chapter.value;
+    }else {return}
 
+    const bible = getBible(...value)[0].result;
+    delete bible.language;
+    delete bible.title;
+    delete bible.abbreviation;
+    delete bible.newTestament;
+
+    whiteOpitons(tagName,Object.keys(bible));
 }
 
 const whiteOpitons = (id, arrayValue) =>{
     const dcTag = document.getElementById(id);
     dcTag.innerHTML = '';
 
-    const fristElement = document.createElement('option')
-    fristElement.innerHTML = 'selecione...'
-    dcTag.appendChild(fristElement);
+    if(id == "verses") optionsCustom('---',dcTag);
+    
 
     arrayValue.map((e,i)=>{
         const newElement = document.createElement('option');
         newElement.innerHTML = e;
         dcTag.appendChild(newElement);
     })
+
+    if(id == "chapters")optionsCustom('All',dcTag);
+    
+    callNewOptions(id);
+}
+
+const optionsCustom = (value,element) =>{
+    const newElementB = document.createElement('option');
+    newElementB.innerHTML = value;
+    element.appendChild(newElementB);
 }
 
 whiteOpitons('books',books('bible'));
 
 
-const click = document.getElementById('button')
-
+const click = document.getElementById('button');
 const clickS = ()=>{
-    const book = document.getElementById('books');
-    const bookData = book.options[book.selectedIndex].value;
+
+    const getSelect = document.getElementsByTagName('select');
+    const idSelect = [...getSelect].map(element => {
+        return element.id;       
+    });
     
-    const chapter = document.getElementById('chapters');
-    const chapterData = chapter.options[chapter.selectedIndex].value;
+    const sectaa = [...idSelect].map(e => selectOptions(e));
+    [book,chapter,verse] = sectaa;
 
-    const verse = document.getElementById('verses');
-    const verseData = verse.options[verse.selectedIndex].value;
+    const res = getBible(book,chapter,verse);
 
-    const res = getBible(bookData,chapterData,verseData)
-    console.log(bookData, chapterData,verseData)
-
-    text.innerHTML = JSON.stringify(res)
+    text.innerHTML = JSON.stringify(res);   
 }
+
+const selectOptions = (value)=>{
+    const element = document.getElementById(value);
+    return element.options[element.selectedIndex].value;
     
+}
+  

@@ -15,10 +15,14 @@
             <section id = "contentSearch">
                 Livro: 
                 <select id="books"  onclick="myFunction(event)">
-                    <option value="select">Selecione um Livro!</option>
+                    
                 </select>
-                Captulo: <select id="chapters" onclick="myFunction(event)"></select>
-                Versiculo: <select id="verses"></select><br><br>
+                Captulo: <select id="chapters" onclick="myFunction(event)">
+                    <option>-</option>
+                </select>
+                Versiculo: <select id="verses">
+                    <option>-</option>
+                </select><br><br>
                 <button onclick="clickS()">Buscar</button>
 
             </section>
