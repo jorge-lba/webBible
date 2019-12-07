@@ -5,29 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Web Bible</title>
+    <link rel="stylesheet" href="./css/index.css">
 </head>
 <body>
     <header>
-        <h1>Biblía Sagrada Online</h1>
+
+        <div class="menu">
+            <a href="">Biblía</a> 
+            <a href="">Anotações</a> 
+            <a href="">Estudos</a> 
+        </div>
+
     </header>
     <nav>
+        <h1>Biblía Sagrada Online</h1>
+
         <div id="search">
             <section id = "contentSearch">
-                Livro: 
-                <select id="books"  onclick="myFunction(event)">
-                    
-                </select>
-                Captulo: <select id="chapters" onclick="myFunction(event)">
-                    <option>-</option>
-                </select>
-                Versiculo: <select id="verses">
-                    <option>-</option>
-                </select><br><br>
+                <span>Livro: </span><select id="books"  onclick="myFunction(event)"></select>
+                <span>Captulo: </span><select id="chapters" onclick="myFunction(event)"></select>
+                <span>Versiculo: </span><select id="verses"></select>
                 <button onclick="clickS()">Buscar</button>
-
             </section>
-
         </div><br>
+        
         <div id="content">
             
         </div>
