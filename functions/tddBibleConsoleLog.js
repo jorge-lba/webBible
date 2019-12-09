@@ -15,8 +15,6 @@ const tdd = ()=>{
     arrayTest.forEach((array, index) => {
         let [test] = bible().get(array[0],array[1],array[2]);
 
-        console.log(test);
-
         if(test == null){
             test =  'Value Null'
         }else{
