@@ -4,35 +4,34 @@ const Bible = require('./controller');
 var assert = require( 'assert' );
 
 const tddBile = (language,version)=>{
-    bibleTDD = require(`./bible/${language}/${version}`)();
-    const bible = new Bible(language, version);
+    const bibleTDD = require(`./bible/${language}/${version}`)();
+    const bible = new Bible(language);
 
     return [bibleTDD,bible];
 }
 
 const getTDD = (array, language = 'pt-br', version = 'NVI') =>{
-    const bible = `tddBile(\'${language}\',\'${version}\')[1]`;
-    const bibleTDD = `tddBile(\'${language}\',\'${version}\')[0]`;
-    let getClass = '.get(';
+    const bible = eval(`tddBile(\'${language}\',\'${version}\')`);
+    
     let getObject ='';
-
+    
     array.forEach(element => {
-        getClass += `\'${element}\',`;
         getObject += `[\'${element}\']`;
     });
-    getClass += ")";
-    return [eval(bible+getClass), eval(bibleTDD+getObject)];
+    const bibleObj = eval('bible[0]'+ getObject)
+    const bibleClass = eval('bible[1]["all"]'+getObject)
+    
+    let teste = eval(bible)
+
+    return [bibleObj, bibleClass];
 }
 
 const test = (array)=>{
+
     array.forEach(e => {
-        const bibleClass = getTDD(e)[0][0]
-        const bibleObject = getTDD(e)[1]
-        
-        assert.equal(bibleClass,bibleObject,"Bible Class são diferentes Bible Object");
-
+        const bible = getTDD(e)
+        assert.equal(bible[0].value, bible[1].value,"Bible Class são diferentes Bible Object");
     })
-
     return 'Teste concluido com Sucesso!';
 }
 
