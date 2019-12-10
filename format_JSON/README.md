@@ -54,3 +54,5 @@ O script será responsável também por separar os livros em suas respectivas pa
 No formato original todos os livros estão em um único arquivo, fragmentando em diversos arquivos, assim caso seja necessário fazer uma atualização ou correção ficara mais simples e leve de ser implementada.
 
 Também será criado um arquivo index.js para fazer os require() unindo todos o livro para um acesso mais simples pelo script de controle.
+
+### teste
