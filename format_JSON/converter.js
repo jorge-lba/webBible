@@ -68,29 +68,32 @@ const array = ( value, obj ) => {
     
 }
 
+const setFoldersPath = ( sourcePath = __dirname) => ( ...newFolders ) => ( language, version ) => {
+    newFolders.push(language)
+    newFolders.push(version)
+
+    for(let a = 0; a < newFolders.length; a++){
+
+        sourcePath += `/${newFolders[a]}`
+        
+        if(!fs.existsSync(sourcePath)) fs.mkdirSync(sourcePath)
+
+    }
+
+    return sourcePath
+}
+
 for(let g = 0; g < arrayJSON.length; g++){
     
     const bLanguage = arrayLanguageVersion[g][0];
     const bVersion = arrayLanguageVersion[g][1];
-    const arrayWay = ['books'];
 
-    let way = __dirname;
+    let way = setFoldersPath( )( 'books' ) (bLanguage, bVersion );
     const arrayBook =[];
     const jsCall = [];
     const jsonFile = bLanguage+bVersion;
-
-    arrayWay.push(bLanguage);
-    arrayWay.push(bVersion);
-
     const getJSON = require(`${__dirname}/bible/${jsonFile}.json`);
 
-    for(let a = 0; a < arrayWay.length; a++){
-
-        way += `/${arrayWay[a]}`
-        
-        if(!fs.existsSync(way)) fs.mkdirSync(way)
-
-    }
 
     for ( let w = 0 ; w < getJSON.length; w++ ){
         
