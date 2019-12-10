@@ -1,33 +1,34 @@
-var fs = require('fs');
+var fs = require('fs')
 
-const arrayJSON = fs.readdirSync('./bible/JSON');
+const arrayJSON = fs.readdirSync(`${__dirname}/bible`)
 
 const autoGetJSON = (array) =>{
+
     const result = array.map(e => {
 
-        e = e.split('');
+        e = e.split('')
 
-        let language = '';
-        let version = '';
-        let test = 'false';
-        e.forEach( (e, index) => {            
+        let language = ''
+        let version = ''
+        let test = 'false'
 
-            if(e.charCodeAt(0)>=65 && e.charCodeAt(0)<=90){
-               test = 'true' 
-            }else if(e == '.'){
-                test = 'ponto';
-            }
+        e.forEach( e => {            
 
+            ( e.charCodeAt ( 0 ) >= 65 && e.charCodeAt ( 0 ) <=90 )
+                ? test = 'true' 
+                : ( e == '.' )
+                    ? test = 'ponto'
+                    : { }
 
-            if(test == 'true'){
-                version += e;
-            }else if (test == 'false'){
-                language += e;
-            }
+            test == 'true'
+                ? version += e
+                : test == 'false'
+                    ? language += e
+                    : { }
 
         })
 
-        return [language, version];
+        return [ language, version ]
     })
 
     return result
@@ -36,24 +37,28 @@ const autoGetJSON = (array) =>{
 const arrayLanguageVersion = autoGetJSON(arrayJSON);
 
 
-const assentRemove = (text) =>{       
-    text = text.toString().toLowerCase();                                                         
+const assentRemove = ( text ) =>{   
+
+    text = text.toString().toLowerCase(); 
+                                                            
     text = text.replace(new RegExp('[ÁÀÂÃ]','gi'), 'a');
     text = text.replace(new RegExp('[ÉÈÊ]','gi'), 'e');
     text = text.replace(new RegExp('[ÍÌÎ]','gi'), 'i');
     text = text.replace(new RegExp('[ÓÒÔÕ]','gi'), 'o');
     text = text.replace(new RegExp('[ÚÙÛ]','gi'), 'u');
     text = text.replace(new RegExp('[Ç]','gi'), 'c');
-    return text.replace(' ','').replace(' ', '').replace('1','I').replace('2','II').replace('3','III');                 
+
+    return text.replace(' ','').replace(' ', '').replace('1','I').replace('2','II').replace('3','III');  
+
 };
 
 for(let g = 0; g < arrayJSON.length; g++){
     
     const bLanguage = arrayLanguageVersion[g][0];
     const bVersion = arrayLanguageVersion[g][1];
-    const arrayWay = ['books','JSON'];
+    const arrayWay = ['books'];
 
-    let way = `.`;
+    let way = __dirname;
     const arrayBook =[];
     const jsCall = [];
     const jsonFile = bLanguage+bVersion;
@@ -61,7 +66,7 @@ for(let g = 0; g < arrayJSON.length; g++){
     arrayWay.push(bLanguage);
     arrayWay.push(bVersion);
 
-    const getJSON = require(`./bible/JSON/${jsonFile}.json`);
+    const getJSON = require(`${__dirname}/bible/${jsonFile}.json`);
 
     for(let a = 0; a < arrayWay.length; a++){
         way += `/${arrayWay[a]}`
