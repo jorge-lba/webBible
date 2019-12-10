@@ -2,6 +2,14 @@ var fs = require( 'fs' )
 
 const arrayJSON = fs.readdirSync( `${__dirname}/bible` )
 
+const testIsUpperCase = ( letter ) => {
+    return( letter.charCodeAt ( 0 ) >= 65 && letter.charCodeAt ( 0 ) <=90 )
+    ? true 
+    : letter == '.'
+        ? null
+        : false
+}
+
 const autoGetJSON = ( array ) =>{
 
     const result = array.map(element => {
@@ -10,19 +18,17 @@ const autoGetJSON = ( array ) =>{
 
         let language = ''
         let version = ''
-        let test = 'false'
-
+        let test = false
+        
         element.forEach( element => {            
+            
+            const result = testIsUpperCase( element ) 
 
-            ( element.charCodeAt ( 0 ) >= 65 && element.charCodeAt ( 0 ) <=90 )
-                ? test = 'true' 
-                : element == '.'
-                    ? test = 'ponto'
-                    : { }
+            result != false ? test = result : { }
 
-            test == 'true'
+            test == true
                 ? version += element
-                : test == 'false'
+                : test == false
                     ? language += element
                     : { }
 
