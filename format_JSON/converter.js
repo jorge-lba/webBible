@@ -10,33 +10,41 @@ const testIsUpperCase = ( letter ) => {
         : false
 }
 
-const getLanguageAndVersion = ( jsonNameFile ) => {
-    
-    jsonNameFile = jsonNameFile.split( '' )
+const autoGetJSON = ( array ) =>{
 
-    let language = ''
-    let version = ''
-    let characterIsUpperCase = false
+    const result = array.map(element => {
 
-    jsonNameFile.forEach( letter => {
+        element = element.split('')
 
-        const isUpperCase = testIsUpperCase( letter )
-
-        isUpperCase != false
-            ? characterIsUpperCase = isUpperCase : { }
+        let language = ''
+        let version = ''
+        let test = false
         
-        if( characterIsUpperCase ) version += letter
-        if( characterIsUpperCase == false ) language += letter
+        element.forEach( element => {            
+            
+            const result = testIsUpperCase( element ) 
 
-    } )
+            result != false ? test = result : { }
 
-    return [ language, version ]
+            test == true
+                ? version += element
+                : test == false
+                    ? language += element
+                    : { }
+
+        })
+
+        return [ language, version ]
+    })
+
+    return result
 }
 
-const autoGetLanguageAndVersion = ( arrayFileName ) => arrayFileName = arrayFileName.map(element => getLanguageAndVersion( element ))
+const arrayLanguageVersion = autoGetJSON(arrayJSON);
+
 
 const assentRemove = ( text ) =>{   
-    
+
     text = text.toString().toLowerCase(); 
                                                             
     text = text.replace(new RegExp('[ÁÀÂÃ]','gi'), 'a');
@@ -45,7 +53,7 @@ const assentRemove = ( text ) =>{
     text = text.replace(new RegExp('[ÓÒÔÕ]','gi'), 'o');
     text = text.replace(new RegExp('[ÚÙÛ]','gi'), 'u');
     text = text.replace(new RegExp('[Ç]','gi'), 'c');
-    
+
     return text.replace(' ','').replace(' ', '').replace('1','I').replace('2','II').replace('3','III');  
 
 };
@@ -69,19 +77,17 @@ const array = ( value, obj ) => {
 const setFoldersPath = ( sourcePath = __dirname) => ( ...newFolders ) => ( language, version ) => {
     newFolders.push(language)
     newFolders.push(version)
-    
+
     for(let a = 0; a < newFolders.length; a++){
-        
+
         sourcePath += `/${newFolders[a]}`
         
         if(!fs.existsSync(sourcePath)) fs.mkdirSync(sourcePath)
-        
+
     }
 
     return sourcePath
 }
-
-const arrayLanguageVersion = autoGetLanguageAndVersion( arrayJSON );
 
 for(let g = 0; g < arrayJSON.length; g++){
     
