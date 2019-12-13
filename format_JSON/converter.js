@@ -9,7 +9,7 @@ const testIsUpperCase = ( letter ) => {
         : false
     }
     
-const languageAndVersion = ( jsonFileName ) => {
+const getLanguageAndVersion = ( jsonFileName ) => {
     jsonFileName = jsonFileName.split( '' )
     
     let language = ''
@@ -107,39 +107,48 @@ const setObjectData = ( language, json, index) => {
     return object
 }
 
+const mapChapters = json => json.chapters.map(chapter => chapter) 
+
+const requireFormat = book => `${ book } = require( \`./_${ book }.json\` )`
+
+const writeFileBook = ( folderPath, bookName, contentObject) => {
+    
+    fs.writeFile( `${ folderPath }/_${ bookName }.json`, `${JSON.stringify( contentObject )}`, function( err ) {
+        if( err ) {
+            console.log( err );
+        }
+    })
+}
+
 const arrayJSON = fs.readdirSync( `${__dirname}/bible` )
-const arrayLanguageVersion = arrayJSON.map( jsonFileName => languageAndVersion( jsonFileName))
+const arrayLanguageVersion = arrayJSON.map( jsonFileName => getLanguageAndVersion( jsonFileName))
 
 
 for(let g = 0; g < arrayJSON.length; g++){
     
-    const bLanguage = arrayLanguageVersion[g][0];
-    const bVersion = arrayLanguageVersion[g][1];
+    const [ bLanguage, bVersion] = arrayLanguageVersion[g]
     
     const way = setFoldersPath( )( 'books' ) (bLanguage, bVersion );
     const arrayBook =[]
     const jsCall = []
     const jsonFile = bLanguage+bVersion
     const getJSON = require(`${__dirname}/bible/${jsonFile}.json`)
-
-    for ( let w = 0 ; w < getJSON.length; w++ ){
+    
+    
+    for ( let index = 0 ; index < getJSON.length; index++ ){
         
-        const getChapter = getJSON[ w ][ 'chapters' ].map( e => e )
-        const obj = setObjectData( bLanguage, getJSON, w )    
-        const book = assentRemove( getJSON[ w ].name )
+        const chapters = mapChapters( getJSON[ index ] )
+        const objectBook = setObjectData( bLanguage, getJSON, index )    
+        const bookName = assentRemove( getJSON[ index ].name )
 
-        arrayBook.push( book );
+        arrayBook.push( bookName );
+        
+        jsCall.push( requireFormat( bookName ) )
 
+        arrayAllBooks( chapters, objectBook )
 
-        arrayAllBooks( getChapter, obj )
+        writeFileBook( way, book, objectBook )
 
-        jsCall.push( `${ book } = require( \`./_${ book }.json\` );`)
-
-        fs.writeFile( `${ way }/_${ book }.json`, `${JSON.stringify( obj )}`, function( err ) {
-            if( err ) {
-                console.log( err );
-            }
-        });
 
     }
 
