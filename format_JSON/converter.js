@@ -113,7 +113,7 @@ const mapChapters = json => json.chapters.map(chapter => chapter)
 
 const requireFormat = book => `${ book } = require( \`./_${ book }.json\` )`
 
-const writeFileBook = ( folderPath, bookName, contentObject) => {
+const createFileBook = ( folderPath, bookName, contentObject) => {
     
     fs.writeFile( `${ folderPath }/_${ bookName }.json`, `${JSON.stringify( contentObject )}`, function( err ) {
         if( err ) {
@@ -121,40 +121,61 @@ const writeFileBook = ( folderPath, bookName, contentObject) => {
         }
     })
 }
+const creatingFiles = ( folderPath, json, language ) => {
+
+    json.forEach( ( value, index ) => {
+        const chapters = mapChapters( value )
+        const objectBook = Object.assign( setObjectData( language, json, index ), arrayAllBookContent( chapters ) )    
+        const bookName = assentRemove( value.name )
+
+        createFileBook( folderPath, bookName, objectBook )
+    })
+}
+
+const returnArrayBooksAndRequire = json => {
+    const booksNames = [ ]
+    const arryRequire = [ ]
+
+    json.forEach( value => {
+        booksNames.push( assentRemove( value.name ) )
+        arryRequire.push( requireFormat( assentRemove( value.name ) ))
+    })
+
+    return [ booksNames, arryRequire ]
+}
 
 const arrayJSON = fs.readdirSync( `${__dirname}/bible` )
 const arrayLanguageVersion = arrayJSON.map( jsonFileName => getLanguageAndVersion( jsonFileName))
 
+arrayJSON.forEach( ( value, index ) => {
 
-for(let g = 0; g < arrayJSON.length; g++){
-    
-    const [ bLanguage, bVersion] = arrayLanguageVersion[g]
-    
+    const [ bLanguage, bVersion] = arrayLanguageVersion[index]
     const folderPath = setFoldersPath( )( 'books' ) (bLanguage, bVersion );
-    const arrayBook =[]
-    const jsCall = []
     const jsonFile = bLanguage+bVersion
     const getJSON = require(`${__dirname}/bible/${jsonFile}.json`)
   
-    
-    for ( let index = 0 ; index < getJSON.length; index++ ){
-        
-        const chapters = mapChapters( getJSON[ index ] )
-        const objectBook = Object.assign( setObjectData( bLanguage, getJSON, index ), arrayAllBookContent( chapters ) )    
-        const bookName = assentRemove( getJSON[ index ].name )
+    creatingFiles( folderPath, getJSON, bLanguage )
+  
+    const [ booksNames, arryRequire ] = returnArrayBooksAndRequire( getJSON );
 
-        arrayBook.push( bookName );
-        
-        jsCall.push( requireFormat( bookName ) )
-
-        
-
-        writeFileBook( folderPath, bookName, objectBook )
-
-
-    }
-
-    createIndexJS( folderPath, jsCall, arrayBook )
+    createIndexJS( folderPath, arryRequire, booksNames )
 
     console.log(`Foi gerada a Biblía no idioma ${ bLanguage } e versão ${bVersion}`);
-}
+
+})
+
+// for(let g = 0; g < arrayJSON.length; g++){
+    
+//     const [ bLanguage, bVersion] = arrayLanguageVersion[g]
+//     const folderPath = setFoldersPath( )( 'books' ) (bLanguage, bVersion );
+//     const jsonFile = bLanguage+bVersion
+//     const getJSON = require(`${__dirname}/bible/${jsonFile}.json`)
+  
+//     creatingFiles( folderPath, getJSON )
+  
+//     const [ booksNames, arryRequire ] = returnArrayBooksAndRequire( getJSON );
+
+//     createIndexJS( folderPath, arryRequire, booksNames )
+
+//     console.log(`Foi gerada a Biblía no idioma ${ bLanguage } e versão ${bVersion}`);
+// }
