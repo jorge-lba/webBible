@@ -47,22 +47,22 @@ const assentRemove = ( text ) =>{
 };
 
 const arrayAllBookContent = ( value ) => {
-    const obj = new Object
 
+    const object = new Object
     const fullArray = [ ];
-    
-    for(let i = 0; i < value.length; i++){
-        const print2 = value[ i ].map(e => e)
-        fullArray[ i ] = print2;
-        obj[i+1] = {};
+
+    value.forEach( (value, index ) => {
+        const write = value.map( e => e )
         
-        print2.forEach((element, index) => {
-            obj[i+1][index+1] = element    
+        fullArray[ index ] = write;
+        object[ index+1 ] = {};
+        
+        write.forEach( ( element, count ) => {
+            object[index+1][count+1] = element    
         });
-        
-    }
-    
-    return obj
+    })
+ 
+    return object
 }
 
 const setFoldersPath = ( sourcePath = __dirname) => ( ...newFolders ) => ( language, version ) => {
@@ -151,31 +151,12 @@ arrayJSON.forEach( ( value, index ) => {
 
     const [ bLanguage, bVersion] = arrayLanguageVersion[index]
     const folderPath = setFoldersPath( )( 'books' ) (bLanguage, bVersion );
-    const jsonFile = bLanguage+bVersion
-    const getJSON = require(`${__dirname}/bible/${jsonFile}.json`)
+    const getJSON = require(`${__dirname}/bible/${bLanguage+bVersion}.json`)
+    const [ booksNames, arryRequire ] = returnArrayBooksAndRequire( getJSON );
   
     creatingFiles( folderPath, getJSON, bLanguage )
-  
-    const [ booksNames, arryRequire ] = returnArrayBooksAndRequire( getJSON );
-
     createIndexJS( folderPath, arryRequire, booksNames )
 
     console.log(`Foi gerada a Biblía no idioma ${ bLanguage } e versão ${bVersion}`);
 
 })
-
-// for(let g = 0; g < arrayJSON.length; g++){
-    
-//     const [ bLanguage, bVersion] = arrayLanguageVersion[g]
-//     const folderPath = setFoldersPath( )( 'books' ) (bLanguage, bVersion );
-//     const jsonFile = bLanguage+bVersion
-//     const getJSON = require(`${__dirname}/bible/${jsonFile}.json`)
-  
-//     creatingFiles( folderPath, getJSON )
-  
-//     const [ booksNames, arryRequire ] = returnArrayBooksAndRequire( getJSON );
-
-//     createIndexJS( folderPath, arryRequire, booksNames )
-
-//     console.log(`Foi gerada a Biblía no idioma ${ bLanguage } e versão ${bVersion}`);
-// }
