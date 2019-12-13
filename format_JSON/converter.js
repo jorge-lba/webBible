@@ -10,38 +10,30 @@ const testIsUpperCase = ( letter ) => {
         : false
 }
 
-const autoGetJSON = ( array ) =>{
+const languageAndVersion = ( jsonFileName ) => {
+    jsonFileName = jsonFileName.split( '' )
 
-    const result = array.map(element => {
+    let language = ''
+    let version = ''
+    let isVersion = false
 
-        element = element.split('')
+    jsonFileName.forEach( letter => {
 
-        let language = ''
-        let version = ''
-        let test = false
-        
-        element.forEach( element => {            
-            
-            const result = testIsUpperCase( element ) 
+        const isUpperCase = testIsUpperCase( letter )
 
-            result != false ? test = result : { }
+        isUpperCase == false ?  { } : isVersion = isUpperCase
 
-            test == true
-                ? version += element
-                : test == false
-                    ? language += element
-                    : { }
+        if( isVersion == false ) language += letter
+        if( isVersion ) version += letter 
 
-        })
-
-        return [ language, version ]
     })
 
-    return result
+    return [ language, version ]
 }
 
-const arrayLanguageVersion = autoGetJSON(arrayJSON);
+const autoGetLanguageAndVersion = ( filesJson ) => filesJson = filesJson.map( jsonFileName => languageAndVersion( jsonFileName))
 
+const arrayLanguageVersion = autoGetLanguageAndVersion(arrayJSON);
 
 const assentRemove = ( text ) =>{   
 
