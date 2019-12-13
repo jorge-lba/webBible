@@ -31,9 +31,7 @@ const languageAndVersion = ( jsonFileName ) => {
     return [ language, version ]
 }
 
-const autoGetLanguageAndVersion = filesJson => filesJson.map( jsonFileName => languageAndVersion( jsonFileName))
-
-const arrayLanguageVersion = autoGetLanguageAndVersion(arrayJSON);
+const arrayLanguageVersion = arrayJSON.map( jsonFileName => languageAndVersion( jsonFileName))
 
 const assentRemove = ( text ) =>{   
 
@@ -82,6 +80,20 @@ const setFoldersPath = ( sourcePath = __dirname) => ( ...newFolders ) => ( langu
     return sourcePath
 }
 
+const createIndexJS = ( folderPath, constRequires, arrayBooks) => {
+    fs.writeFile( `${folderPath}/index.js`, `module.exports = ( ) => {
+        ${constRequires.join(`
+        `)}
+
+        return {
+            ${arrayBooks}
+        }
+
+    }`, function( err ) {
+        err ? console.log( err ) : console.log( "The file was saved!" )
+    })
+}
+
 for(let g = 0; g < arrayJSON.length; g++){
     
     const bLanguage = arrayLanguageVersion[g][0];
@@ -123,24 +135,7 @@ for(let g = 0; g < arrayJSON.length; g++){
 
     }
 
-    fs.writeFile(`${way}/index.js`,`module.exports = () => {
-
-        ${jsCall.join(`
-        `)} 
-
-        return {
-
-            ${arrayBook}
-
-        }
-
-    }`, function(err) {
-        if(err) {
-            console.log(err);
-        } else {
-            console.log("The file was saved!");
-        }
-    });
+    createIndexJS( way, jsCall, arrayBook )
 
     console.log(`Foi gerada a Biblía no idioma ${ bLanguage } e versão ${bVersion}`);
 }
