@@ -31,7 +31,7 @@ const languageAndVersion = ( jsonFileName ) => {
     return [ language, version ]
 }
 
-const autoGetLanguageAndVersion = ( filesJson ) => filesJson = filesJson.map( jsonFileName => languageAndVersion( jsonFileName))
+const autoGetLanguageAndVersion = filesJson => filesJson.map( jsonFileName => languageAndVersion( jsonFileName))
 
 const arrayLanguageVersion = autoGetLanguageAndVersion(arrayJSON);
 
@@ -50,7 +50,8 @@ const assentRemove = ( text ) =>{
 
 };
 
-const array = ( value, obj ) => {
+const arrayAllBooks = ( value, obj ) => {
+ 
     const fullArray = [ ];
 
     for(let i = 0; i < value.length; i++){
@@ -95,7 +96,7 @@ for(let g = 0; g < arrayJSON.length; g++){
 
     for ( let w = 0 ; w < getJSON.length; w++ ){
         
-        let print = getJSON[ w ].chapters.map( e => e )
+        let getChapter = getJSON[ w ][ 'chapters' ].map( e => e )
         const obj = new Object;    
         const book = assentRemove( getJSON[ w ].name )
 
@@ -110,7 +111,7 @@ for(let g = 0; g < arrayJSON.length; g++){
             ? obj.newTestament = false
             : obj.newTestament = true
 
-        array( print, obj )
+        arrayAllBooks( getChapter, obj )
 
         jsCall.push( `${ book } = require( \`./_${ book }.json\` );`)
 
