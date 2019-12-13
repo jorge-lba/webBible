@@ -1,42 +1,40 @@
 var fs = require( 'fs' )
 
-const arrayJSON = fs.readdirSync( `${__dirname}/bible` )
 
 const testIsUpperCase = ( letter ) => {
     return( letter.charCodeAt ( 0 ) >= 65 && letter.charCodeAt ( 0 ) <=90 )
     ? true 
     : letter == '.'
-        ? null
+    ? null
         : false
-}
-
+    }
+    
 const languageAndVersion = ( jsonFileName ) => {
     jsonFileName = jsonFileName.split( '' )
-
+    
     let language = ''
     let version = ''
     let isVersion = false
 
     jsonFileName.forEach( letter => {
-
+        
         const isUpperCase = testIsUpperCase( letter )
-
+        
         isUpperCase == false ?  { } : isVersion = isUpperCase
-
+        
         if( isVersion == false ) language += letter
         if( isVersion ) version += letter 
-
+        
     })
-
+    
     return [ language, version ]
 }
 
-const arrayLanguageVersion = arrayJSON.map( jsonFileName => languageAndVersion( jsonFileName))
 
 const assentRemove = ( text ) =>{   
-
+    
     text = text.toString().toLowerCase(); 
-                                                            
+    
     text = text.replace(new RegExp('[ÁÀÂÃ]','gi'), 'a');
     text = text.replace(new RegExp('[ÉÈÊ]','gi'), 'e');
     text = text.replace(new RegExp('[ÍÌÎ]','gi'), 'i');
@@ -45,13 +43,13 @@ const assentRemove = ( text ) =>{
     text = text.replace(new RegExp('[Ç]','gi'), 'c');
 
     return text.replace(' ','').replace(' ', '').replace('1','I').replace('2','II').replace('3','III');  
-
+    
 };
 
 const arrayAllBooks = ( value, obj ) => {
- 
+    
     const fullArray = [ ];
-
+    
     for(let i = 0; i < value.length; i++){
         const print2 = value[ i ].map(e => e)
         fullArray[ i ] = print2;
@@ -60,7 +58,7 @@ const arrayAllBooks = ( value, obj ) => {
         print2.forEach((element, index) => {
             obj[i+1][index+1] = element    
         });
-
+        
     }
     
 }
@@ -68,15 +66,15 @@ const arrayAllBooks = ( value, obj ) => {
 const setFoldersPath = ( sourcePath = __dirname) => ( ...newFolders ) => ( language, version ) => {
     newFolders.push(language)
     newFolders.push(version)
-
+    
     for(let a = 0; a < newFolders.length; a++){
-
+        
         sourcePath += `/${newFolders[a]}`
         
         if(!fs.existsSync(sourcePath)) fs.mkdirSync(sourcePath)
-
+        
     }
-
+    
     return sourcePath
 }
 
@@ -84,44 +82,54 @@ const createIndexJS = ( folderPath, constRequires, arrayBooks) => {
     fs.writeFile( `${folderPath}/index.js`, `module.exports = ( ) => {
         ${constRequires.join(`
         `)}
-
+        
         return {
             ${arrayBooks}
         }
-
+        
     }`, function( err ) {
         err ? console.log( err ) : console.log( "The file was saved!" )
     })
 }
 
+const setObjectData = ( language, json, index) => {
+    const object = new Object
+
+    object.language =language
+    object.version = json.verson
+    object.title = json[ index ].name;
+    object.abbreviation = assentRemove( json[ index ].abbrev );
+
+    index < 39
+        ? object.newTestament = false
+        : object.newTestament = true
+
+    return object
+}
+
+const arrayJSON = fs.readdirSync( `${__dirname}/bible` )
+const arrayLanguageVersion = arrayJSON.map( jsonFileName => languageAndVersion( jsonFileName))
+
+
 for(let g = 0; g < arrayJSON.length; g++){
     
     const bLanguage = arrayLanguageVersion[g][0];
     const bVersion = arrayLanguageVersion[g][1];
-
-    let way = setFoldersPath( )( 'books' ) (bLanguage, bVersion );
-    const arrayBook =[];
-    const jsCall = [];
-    const jsonFile = bLanguage+bVersion;
-    const getJSON = require(`${__dirname}/bible/${jsonFile}.json`);
-
+    
+    const way = setFoldersPath( )( 'books' ) (bLanguage, bVersion );
+    const arrayBook =[]
+    const jsCall = []
+    const jsonFile = bLanguage+bVersion
+    const getJSON = require(`${__dirname}/bible/${jsonFile}.json`)
 
     for ( let w = 0 ; w < getJSON.length; w++ ){
         
-        let getChapter = getJSON[ w ][ 'chapters' ].map( e => e )
-        const obj = new Object;    
+        const getChapter = getJSON[ w ][ 'chapters' ].map( e => e )
+        const obj = setObjectData( bLanguage, getJSON, w )    
         const book = assentRemove( getJSON[ w ].name )
 
         arrayBook.push( book );
 
-        obj.language = bLanguage
-        obj.version = getJSON.verson
-        obj.title = getJSON[ w ].name;
-        obj.abbreviation = assentRemove( getJSON[ w ].abbrev );
-
-        w < 39
-            ? obj.newTestament = false
-            : obj.newTestament = true
 
         arrayAllBooks( getChapter, obj )
 
