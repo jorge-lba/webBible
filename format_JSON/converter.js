@@ -9,7 +9,7 @@ const testIsUpperCase = ( letter ) => {
         : false
     }
     
-const languageAndVersion = ( jsonFileName ) => {
+const getLanguageAndVersion = ( jsonFileName ) => {
     jsonFileName = jsonFileName.split( '' )
     
     let language = ''
@@ -46,21 +46,23 @@ const assentRemove = ( text ) =>{
     
 };
 
-const arrayAllBooks = ( value, obj ) => {
-    
+const arrayAllBookContent = ( value ) => {
+
+    const object = new Object
     const fullArray = [ ];
-    
-    for(let i = 0; i < value.length; i++){
-        const print2 = value[ i ].map(e => e)
-        fullArray[ i ] = print2;
-        obj[i+1] = {};
+
+    value.forEach( (value, index ) => {
+        const write = value.map( e => e )
         
-        print2.forEach((element, index) => {
-            obj[i+1][index+1] = element    
+        fullArray[ index ] = write;
+        object[ index+1 ] = {};
+        
+        write.forEach( ( element, count ) => {
+            object[index+1][count+1] = element    
         });
-        
-    }
-    
+    })
+ 
+    return object
 }
 
 const setFoldersPath = ( sourcePath = __dirname) => ( ...newFolders ) => ( language, version ) => {
@@ -107,43 +109,54 @@ const setObjectData = ( language, json, index) => {
     return object
 }
 
+const mapChapters = json => json.chapters.map(chapter => chapter) 
+
+const requireFormat = book => `${ book } = require( \`./_${ book }.json\` )`
+
+const createFileBook = ( folderPath, bookName, contentObject) => {
+    
+    fs.writeFile( `${ folderPath }/_${ bookName }.json`, `${JSON.stringify( contentObject )}`, function( err ) {
+        if( err ) {
+            console.log( err );
+        }
+    })
+}
+const creatingFiles = ( folderPath, json, language ) => {
+
+    json.forEach( ( value, index ) => {
+        const chapters = mapChapters( value )
+        const objectBook = Object.assign( setObjectData( language, json, index ), arrayAllBookContent( chapters ) )    
+        const bookName = assentRemove( value.name )
+
+        createFileBook( folderPath, bookName, objectBook )
+    })
+}
+
+const returnArrayBooksAndRequire = json => {
+    const booksNames = [ ]
+    const arryRequire = [ ]
+
+    json.forEach( value => {
+        booksNames.push( assentRemove( value.name ) )
+        arryRequire.push( requireFormat( assentRemove( value.name ) ))
+    })
+
+    return [ booksNames, arryRequire ]
+}
+
 const arrayJSON = fs.readdirSync( `${__dirname}/bible` )
-const arrayLanguageVersion = arrayJSON.map( jsonFileName => languageAndVersion( jsonFileName))
+const arrayLanguageVersion = arrayJSON.map( jsonFileName => getLanguageAndVersion( jsonFileName))
 
+arrayJSON.forEach( ( value, index ) => {
 
-for(let g = 0; g < arrayJSON.length; g++){
-    
-    const bLanguage = arrayLanguageVersion[g][0];
-    const bVersion = arrayLanguageVersion[g][1];
-    
-    const way = setFoldersPath( )( 'books' ) (bLanguage, bVersion );
-    const arrayBook =[]
-    const jsCall = []
-    const jsonFile = bLanguage+bVersion
-    const getJSON = require(`${__dirname}/bible/${jsonFile}.json`)
-
-    for ( let w = 0 ; w < getJSON.length; w++ ){
-        
-        const getChapter = getJSON[ w ][ 'chapters' ].map( e => e )
-        const obj = setObjectData( bLanguage, getJSON, w )    
-        const book = assentRemove( getJSON[ w ].name )
-
-        arrayBook.push( book );
-
-
-        arrayAllBooks( getChapter, obj )
-
-        jsCall.push( `${ book } = require( \`./_${ book }.json\` );`)
-
-        fs.writeFile( `${ way }/_${ book }.json`, `${JSON.stringify( obj )}`, function( err ) {
-            if( err ) {
-                console.log( err );
-            }
-        });
-
-    }
-
-    createIndexJS( way, jsCall, arrayBook )
+    const [ bLanguage, bVersion] = arrayLanguageVersion[index]
+    const folderPath = setFoldersPath( )( 'books' ) (bLanguage, bVersion );
+    const getJSON = require(`${__dirname}/bible/${bLanguage+bVersion}.json`)
+    const [ booksNames, arryRequire ] = returnArrayBooksAndRequire( getJSON );
+  
+    creatingFiles( folderPath, getJSON, bLanguage )
+    createIndexJS( folderPath, arryRequire, booksNames )
 
     console.log(`Foi gerada a Biblía no idioma ${ bLanguage } e versão ${bVersion}`);
-}
+
+})
