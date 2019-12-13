@@ -46,8 +46,9 @@ const assentRemove = ( text ) =>{
     
 };
 
-const arrayAllBooks = ( value, obj ) => {
-    
+const arrayAllBookContent = ( value ) => {
+    const obj = new Object
+
     const fullArray = [ ];
     
     for(let i = 0; i < value.length; i++){
@@ -61,6 +62,7 @@ const arrayAllBooks = ( value, obj ) => {
         
     }
     
+    return obj
 }
 
 const setFoldersPath = ( sourcePath = __dirname) => ( ...newFolders ) => ( language, version ) => {
@@ -128,31 +130,31 @@ for(let g = 0; g < arrayJSON.length; g++){
     
     const [ bLanguage, bVersion] = arrayLanguageVersion[g]
     
-    const way = setFoldersPath( )( 'books' ) (bLanguage, bVersion );
+    const folderPath = setFoldersPath( )( 'books' ) (bLanguage, bVersion );
     const arrayBook =[]
     const jsCall = []
     const jsonFile = bLanguage+bVersion
     const getJSON = require(`${__dirname}/bible/${jsonFile}.json`)
-    
+  
     
     for ( let index = 0 ; index < getJSON.length; index++ ){
         
         const chapters = mapChapters( getJSON[ index ] )
-        const objectBook = setObjectData( bLanguage, getJSON, index )    
+        const objectBook = Object.assign( setObjectData( bLanguage, getJSON, index ), arrayAllBookContent( chapters ) )    
         const bookName = assentRemove( getJSON[ index ].name )
 
         arrayBook.push( bookName );
         
         jsCall.push( requireFormat( bookName ) )
 
-        arrayAllBooks( chapters, objectBook )
+        
 
-        writeFileBook( way, book, objectBook )
+        writeFileBook( folderPath, bookName, objectBook )
 
 
     }
 
-    createIndexJS( way, jsCall, arrayBook )
+    createIndexJS( folderPath, jsCall, arrayBook )
 
     console.log(`Foi gerada a Biblía no idioma ${ bLanguage } e versão ${bVersion}`);
 }
