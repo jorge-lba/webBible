@@ -119,7 +119,6 @@ const clickS = ()=>{
 
     isNaN(verse) ? {} : {}
 
-    console.log(createDivVerse(obj))
     divContent.innerHTML = ridingHTML(chapter, verse, obj) ;   
 }
 
