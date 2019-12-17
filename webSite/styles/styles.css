@@ -17,6 +17,7 @@
 
 body {
     text-align: center;
+    width: 100%;
 }
 
 header {
@@ -89,7 +90,10 @@ h2 {
 
 .verse {
     text-align: left;
-    padding: 5px;
+    padding: 10px;
+}
+content {
+    width: 100%;
 }
 
 #content div:nth-child(even) {

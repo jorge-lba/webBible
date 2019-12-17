@@ -1,7 +1,7 @@
 //import { get } from "http";
 
 //const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-const text = document.getElementById('content');
+const divContent = document.getElementById('content');
 const _book =  document.getElementById('books');
 const _chapter = document.getElementById('chapters');
 const _verse = document.getElementById('verses');
@@ -76,7 +76,7 @@ const whiteOpitons = (id, arrayValue) =>{
         dcTag.appendChild(newElement);
     })
 
-    if(id == "chapters")optionsCustom('All',dcTag);
+    //if(id == "chapters")optionsCustom('All',dcTag);
     
     callNewOptions(id);
 }
@@ -89,6 +89,19 @@ const optionsCustom = (value,element) =>{
 
 whiteOpitons('books',books('bible'));
 
+const createH2Chapter = (number) => `<h2>Capítulo ${number}</h2>`
+const createDivVerse = (content) => {
+    const versesNumbers = Object.keys(content)
+    return versesNumbers.map((verseNumber, index)=>`<div class="verse ${verseNumber}">${verseNumber}. ${content[index+1]}</div>`)
+            .reduce((contentHTML, contentVerse) => contentHTML+contentVerse)
+
+}
+
+const ridingHTML = (chapterNumber, verseNumber, objectContent) =>{
+    return isNaN(verseNumber)
+    ? createH2Chapter(chapterNumber) + createDivVerse(objectContent)
+    : createH2Chapter(chapterNumber) + `<div class="verse ${verseNumber}">${verseNumber}. ${objectContent}</div>`
+}
 
 const click = document.getElementById('button');
 const clickS = ()=>{
@@ -102,8 +115,12 @@ const clickS = ()=>{
     [book,chapter,verse] = sectaa;
 
     const res = getBible(book,chapter,verse);
+    const obj = res[0].result
 
-    text.innerHTML = JSON.stringify(res);   
+    isNaN(verse) ? {} : {}
+
+    console.log(createDivVerse(obj))
+    divContent.innerHTML = ridingHTML(chapter, verse, obj) ;   
 }
 
 const selectOptions = (value)=>{
