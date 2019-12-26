@@ -5,13 +5,15 @@ const divContent = document.getElementById('content');
 const _book =  document.getElementById('books');
 const _chapter = document.getElementById('chapters');
 const _verse = document.getElementById('verses');
+const _language = document.getElementById('language');
 
 
 
 
 const getBible = (book, chapter, verse) =>{
     const xmlHttp = new XMLHttpRequest();
-    const url = `https://us-central1-webbible-kll.cloudfunctions.net/bible?book=${book}&chapter=${chapter}&verse=${verse}`
+    language = _language.value
+    const url = `https://us-central1-webbible-kll.cloudfunctions.net/bible?language=${language}&book=${book}&chapter=${chapter}&verse=${verse}`
     let  myArr ='';
     xmlHttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -24,6 +26,10 @@ const getBible = (book, chapter, verse) =>{
     
     return myArr
 
+}
+
+const selectLanguage = () =>{
+    
 }
 
 const books = (value) => {
@@ -69,14 +75,11 @@ const whiteOpitons = (id, arrayValue) =>{
 
     if(id == "verses") optionsCustom('---',dcTag);
     
-
     arrayValue.map((e,i)=>{
         const newElement = document.createElement('option');
         newElement.innerHTML = e;
         dcTag.appendChild(newElement);
     })
-
-    //if(id == "chapters")optionsCustom('All',dcTag);
     
     callNewOptions(id);
 }
@@ -105,22 +108,24 @@ const ridingHTML = (chapterNumber, verseNumber, objectContent) =>{
 
 const click = document.getElementById('button');
 const clickS = ()=>{
-
+    
     const getSelect = document.getElementsByTagName('select');
     const idSelect = [...getSelect].map(element => {
         return element.id;       
     });
     
     const sectaa = [...idSelect].map(e => selectOptions(e));
-    [book,chapter,verse] = sectaa;
+    [language,book,chapter,verse] = sectaa;
 
     const res = getBible(book,chapter,verse);
     const obj = res[0].result
 
-    isNaN(verse) ? {} : {}
-
     divContent.innerHTML = ridingHTML(chapter, verse, obj) ;   
 }
+
+_language.addEventListener('change', function () {
+    whiteOpitons('books',books('bible'))
+})
 
 const selectOptions = (value)=>{
     const element = document.getElementById(value);
