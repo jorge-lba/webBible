@@ -6,7 +6,7 @@ const _book =  document.getElementById('books');
 const _chapter = document.getElementById('chapters');
 const _verse = document.getElementById('verses');
 const _language = document.getElementById('language');
-
+const _select = document.getElementsByTagName('select')
 
 
 
@@ -90,14 +90,13 @@ const optionsCustom = (value,element) =>{
     element.appendChild(newElementB);
 }
 
-whiteOpitons('books',books('bible'));
 
 const createH2Chapter = (number) => `<h2>Capítulo ${number}</h2>`
 const createDivVerse = (content) => {
     const versesNumbers = Object.keys(content)
     return versesNumbers.map((verseNumber, index)=>`<div class="verse ${verseNumber}">${verseNumber}. ${content[index+1]}</div>`)
             .reduce((contentHTML, contentVerse) => contentHTML+contentVerse)
-
+            
 }
 
 const ridingHTML = (chapterNumber, verseNumber, objectContent) =>{
@@ -106,8 +105,7 @@ const ridingHTML = (chapterNumber, verseNumber, objectContent) =>{
     : createH2Chapter(chapterNumber) + `<div class="verse ${verseNumber}">${verseNumber}. ${objectContent}</div>`
 }
 
-const click = document.getElementById('button');
-const clickS = ()=>{
+const updateContent = ()=>{
     
     const getSelect = document.getElementsByTagName('select');
     const idSelect = [...getSelect].map(element => {
@@ -119,17 +117,20 @@ const clickS = ()=>{
 
     const res = getBible(book,chapter,verse);
     const obj = res[0].result
-
+    
     divContent.innerHTML = ridingHTML(chapter, verse, obj) ;   
 }
 
-_language.addEventListener('change', function () {
-    whiteOpitons('books',books('bible'))
-})
+_language.addEventListener('change',() => whiteOpitons('books',books('bible')))
 
 const selectOptions = (value)=>{
     const element = document.getElementById(value);
     return element.options[element.selectedIndex].value;
     
 }
-  
+
+_book.addEventListener('change', () => { updateContent() })
+_chapter.addEventListener('change', () => { updateContent() })
+_verse.addEventListener('change', () => { updateContent() })
+
+whiteOpitons('books',books('bible'));
