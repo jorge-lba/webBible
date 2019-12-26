@@ -121,7 +121,6 @@ const updateContent = ()=>{
     divContent.innerHTML = ridingHTML(chapter, verse, obj) ;   
 }
 
-_language.addEventListener('change',() => whiteOpitons('books',books('bible')))
 
 const selectOptions = (value)=>{
     const element = document.getElementById(value);
@@ -129,8 +128,10 @@ const selectOptions = (value)=>{
     
 }
 
-_book.addEventListener('change', () => { updateContent() })
-_chapter.addEventListener('change', () => { updateContent() })
-_verse.addEventListener('change', () => { updateContent() })
+_language.addEventListener('change',() => { whiteOpitons('books',books('bible')); updateContent() })
+_book.addEventListener('change', () => { _verse.value = '---' ; updateContent() })
+_chapter.addEventListener('change', () => { _verse.value = '---' ; updateContent() })
+_verse.addEventListener('change', () => updateContent() )
 
-whiteOpitons('books',books('bible'));
+whiteOpitons('books',books('bible'))
+updateContent()
