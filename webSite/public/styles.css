@@ -20,14 +20,10 @@ body {
     width: 100%;
 }
 
-h1 {
-    padding-left: 20px;
-}
 
 header {
     display: grid;
-    grid-template-columns: 50px 1fr;
-    grid-template-rows: 1;
+    grid-template-columns: 130px 1fr;
     align-items: center;
 
     width: 100%;
@@ -36,8 +32,16 @@ header {
     background-color: #4f5b62;
 }
 
+header div {
+    width: 200px;
+    grid-column-start: 3;
+}
+
 header select {
-    width: 80px;
+    width: 70px;
+    height: 30px;
+    font-size: .8em;
+        
 }
 
 nav {
